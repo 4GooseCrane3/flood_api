@@ -4,15 +4,15 @@ import numpy as np
 
 app = FastAPI()
 
-# Load joblib model
-model = joblib.load("app/hightide_model.joblib")
+# Load your joblib model (file is in the same folder)
+model = joblib.load("hightide_model.joblib")
 
 @app.get("/")
-def home():
-    return {"message": "Model API is running!"}
+def read_root():
+    return {"message": "Hightide model API is running"}
 
-@app.post("/predict")
-def predict(data: dict):
-    features = np.array(data["features"]).reshape(1, -1)
-    prediction = model.predict(features)
-    return {"prediction": prediction.tolist()}
+@app.get("/predict")
+def predict(value: float):
+    # Example: model expects 1D array
+    prediction = model.predict(np.array([[value]]))
+    return {"input": value, "prediction": prediction.tolist()}
